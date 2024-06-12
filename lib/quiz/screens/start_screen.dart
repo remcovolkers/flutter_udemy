@@ -23,6 +23,7 @@ class StartScreen extends StatelessWidget {
             style: GoogleFonts.golosText(
               fontSize: 24,
               color: const Color.fromARGB(255, 187, 174, 255),
+              fontWeight: FontWeight.bold,
             ),
           ),
           const SizedBox(height: 30),
