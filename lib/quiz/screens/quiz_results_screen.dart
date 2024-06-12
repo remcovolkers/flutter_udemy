@@ -14,7 +14,7 @@ class QuizResultsScreen extends StatelessWidget {
   final void Function() onResetQuiz;
   final List<String> selectedAnswers;
 
-  List<Map<String, Object>> getSummaryData() {
+  List<Map<String, Object>> get quizSummary {
     final List<Map<String, Object>> summary = [];
 
     for (int i = 0; i < selectedAnswers.length; i++) {
@@ -31,7 +31,7 @@ class QuizResultsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final int noCorrectAnswers = getSummaryData()
+    final int noCorrectAnswers = quizSummary
         .where((answer) => answer['correct_answer'] == answer['given_answer'])
         .length;
 
@@ -50,7 +50,7 @@ class QuizResultsScreen extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 30),
-            QuestionsSummary(summaryData: getSummaryData()),
+            QuestionsSummary(summaryData: quizSummary),
             const SizedBox(height: 30),
             OutlinedButton(
               onPressed: onResetQuiz,
