@@ -1,8 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_udemy/dice-roller/components/dice_roller.dart';
-import 'package:flutter_udemy/quiz/quiz.dart';
+import 'package:flutter_udemy/expense-tracker/expense_tracker.dart';
 
+/// Quiz Runner
+
+// void main() {
+//   runApp(const Quiz());
+// }
+
+/// Expense Tracker runner
 void main() {
-  // runApp(const DiceRoller());
-  runApp(const Quiz());
+  runApp(
+    MaterialApp(
+      home: ExpenseTracker(),
+    ),
+  );
 }
