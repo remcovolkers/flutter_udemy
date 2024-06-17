@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_udemy/expense-tracker/expense_tracker.dart';
-import 'package:flutter_udemy/theming/theme.dart';
+import 'package:flutter_udemy/expense-tracker/theming/theme.dart';
 
 /// Quiz Runner
 
