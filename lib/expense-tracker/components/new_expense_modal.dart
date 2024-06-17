@@ -87,6 +87,7 @@ class _AddOrEditExpenseModalState extends State<AddOrEditExpenseModal> {
 
   @override
   Widget build(BuildContext context) {
+    final double keyboardInset = MediaQuery.of(context).viewInsets.bottom;
     inspect(widget.expense);
 
     bool isEdit = widget.expense != null;

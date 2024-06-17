@@ -27,7 +27,10 @@ class ExpensesList extends StatelessWidget {
           color: Theme.of(context).colorScheme.error.withOpacity(0.75),
           margin: EdgeInsets.symmetric(horizontal: Theme.of(context).cardTheme.margin!.horizontal),
         ),
-        child: ExpenseTile(expensesList[index], openEditScreen: onEditExpense),
+        child: ExpenseTile(
+          expensesList[index],
+          openEditScreen: onEditExpense,
+        ),
       ),
     );
   }

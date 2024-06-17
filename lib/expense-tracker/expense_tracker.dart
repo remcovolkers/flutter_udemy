@@ -73,6 +73,8 @@ class _ExpenseTrackerState extends State<ExpenseTracker> {
 
   @override
   Widget build(BuildContext context) {
+    bool isLandscape = MediaQuery.of(context).size.width > MediaQuery.of(context).size.height;
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Expense Tracker'),
@@ -83,20 +85,35 @@ class _ExpenseTrackerState extends State<ExpenseTracker> {
           ),
         ],
       ),
-      body: Column(
-        children: [
-          Chart(expenses: widget.expenses),
-          Expanded(
-            child: widget.expenses.isNotEmpty
-                ? ExpensesList(
-                    expensesList: widget.expenses,
-                    onRemoveExpense: _removeExpense,
-                    onEditExpense: _openAddExpenseOverlay,
-                  )
-                : mainContent,
-          ),
-        ],
-      ),
+      body: !isLandscape
+          ? Column(
+              children: [
+                Chart(expenses: widget.expenses),
+                Expanded(
+                  child: widget.expenses.isNotEmpty
+                      ? ExpensesList(
+                          expensesList: widget.expenses,
+                          onRemoveExpense: _removeExpense,
+                          onEditExpense: _openAddExpenseOverlay,
+                        )
+                      : mainContent,
+                ),
+              ],
+            )
+          : Row(
+              children: [
+                Expanded(child: Chart(expenses: widget.expenses)),
+                Expanded(
+                  child: widget.expenses.isNotEmpty
+                      ? ExpensesList(
+                          expensesList: widget.expenses,
+                          onRemoveExpense: _removeExpense,
+                          onEditExpense: _openAddExpenseOverlay,
+                        )
+                      : mainContent,
+                ),
+              ],
+            ),
     );
   }
 }
