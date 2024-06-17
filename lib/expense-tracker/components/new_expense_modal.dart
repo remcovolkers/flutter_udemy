@@ -1,16 +1,19 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_udemy/expense-tracker/enums/expense_category.dart';
 import 'package:flutter_udemy/expense-tracker/models/expense.dart';
+import 'package:flutter_udemy/expense-tracker/models/expense_response.dart';
 
-class NewExpenseModal extends StatefulWidget {
-  final void Function(Expense expense) addExpense;
-  const NewExpenseModal({super.key, required this.addExpense});
+class AddOrEditExpenseModal extends StatefulWidget {
+  final Expense? expense;
+  const AddOrEditExpenseModal({super.key, this.expense});
 
   @override
-  State<NewExpenseModal> createState() => _NewExpenseModalState();
+  State<AddOrEditExpenseModal> createState() => _AddOrEditExpenseModalState();
 }
 
-class _NewExpenseModalState extends State<NewExpenseModal> {
+class _AddOrEditExpenseModalState extends State<AddOrEditExpenseModal> {
   final TextEditingController _descriptionController = TextEditingController();
   final TextEditingController _valueController = TextEditingController();
   ExpenseCategory _selectedExpenseCategory = ExpenseCategory.leisure;
@@ -37,15 +40,27 @@ class _NewExpenseModalState extends State<NewExpenseModal> {
       return;
     }
 
-    widget.addExpense(
-      Expense(
-        value: value,
-        description: _descriptionController.text,
-        date: _selectedDate!,
-        category: _selectedExpenseCategory,
-      ),
-    );
-    Navigator.pop(context);
+    if (widget.expense != null) {
+      widget.expense!.category = _selectedExpenseCategory;
+      widget.expense!.description = _descriptionController.text;
+      widget.expense!.value = double.parse(_valueController.text);
+
+      if (_selectedDate != null) {
+        widget.expense!.date = _selectedDate!;
+      }
+    }
+
+    Expense newOrEdittedExpense = widget.expense ??
+        Expense(
+          value: value,
+          description: _descriptionController.text,
+          date: _selectedDate!,
+          category: _selectedExpenseCategory,
+        );
+
+    ExpenseResponse addResponse =
+        ExpenseResponse(isEdit: widget.expense != null, expense: newOrEdittedExpense);
+    return Navigator.of(context).pop(addResponse);
   }
 
   void _openDatePicker() async {
@@ -72,6 +87,17 @@ class _NewExpenseModalState extends State<NewExpenseModal> {
 
   @override
   Widget build(BuildContext context) {
+    inspect(widget.expense);
+
+    bool isEdit = widget.expense != null;
+
+    if (isEdit) {
+      _descriptionController.text = widget.expense!.description;
+      _valueController.text = widget.expense!.value.toString();
+      _selectedExpenseCategory = widget.expense!.category;
+      _selectedDate = widget.expense!.date;
+    }
+
     return Padding(
       padding: const EdgeInsets.fromLTRB(16, 48, 16, 16),
       child: Column(

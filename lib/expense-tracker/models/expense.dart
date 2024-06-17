@@ -6,11 +6,11 @@ const uuid = Uuid();
 final formatter = DateFormat.yMd();
 
 class Expense {
-  final double value;
-  final String description;
-  final DateTime date;
+  double value;
+  String description;
+  DateTime date;
   final String id;
-  final ExpenseCategory category;
+  ExpenseCategory category;
 
   Expense({
     required this.value,

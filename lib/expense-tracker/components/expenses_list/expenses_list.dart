@@ -5,11 +5,13 @@ import 'package:flutter_udemy/expense-tracker/models/expense.dart';
 class ExpensesList extends StatelessWidget {
   final List<Expense> expensesList;
   final void Function(Expense expense) onRemoveExpense;
+  final void Function(Expense expense) onEditExpense;
 
   const ExpensesList({
     super.key,
     required this.expensesList,
     required this.onRemoveExpense,
+    required this.onEditExpense,
   });
 
   @override
@@ -25,7 +27,7 @@ class ExpensesList extends StatelessWidget {
           color: Theme.of(context).colorScheme.error.withOpacity(0.75),
           margin: EdgeInsets.symmetric(horizontal: Theme.of(context).cardTheme.margin!.horizontal),
         ),
-        child: ExpenseTile(expensesList[index]),
+        child: ExpenseTile(expensesList[index], openEditScreen: onEditExpense),
       ),
     );
   }

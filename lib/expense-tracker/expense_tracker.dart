@@ -4,6 +4,7 @@ import 'package:flutter_udemy/expense-tracker/components/expenses_list/expenses_
 import 'package:flutter_udemy/expense-tracker/components/new_expense_modal.dart';
 import 'package:flutter_udemy/expense-tracker/data/expense_data.dart';
 import 'package:flutter_udemy/expense-tracker/models/expense.dart';
+import 'package:flutter_udemy/expense-tracker/models/expense_response.dart';
 
 class ExpenseTracker extends StatefulWidget {
   ExpenseTracker({super.key});
@@ -44,16 +45,30 @@ class _ExpenseTrackerState extends State<ExpenseTracker> {
     );
   }
 
-  void _openAddExpenseOverlay() {
-    showModalBottomSheet(
+  void _onEditExpense(Expense expense) {
+    int editIndex = widget.expenses.indexOf(expense);
+
+    setState(() {
+      widget.expenses[editIndex] = expense;
+    });
+  }
+
+  void _openAddExpenseOverlay(Expense? expense) async {
+    ExpenseResponse newOrEdittedExpense = await showModalBottomSheet(
       isScrollControlled: true,
       context: context,
       builder: (modalContext) {
-        return NewExpenseModal(
-          addExpense: (Expense expense) => _addExpense(expense),
+        return AddOrEditExpenseModal(
+          expense: expense,
         );
       },
     );
+
+    if (newOrEdittedExpense.isEdit) {
+      _onEditExpense(newOrEdittedExpense.expense);
+    } else {
+      _addExpense(newOrEdittedExpense.expense);
+    }
   }
 
   @override
@@ -63,7 +78,7 @@ class _ExpenseTrackerState extends State<ExpenseTracker> {
         title: const Text('Expense Tracker'),
         actions: [
           IconButton(
-            onPressed: _openAddExpenseOverlay,
+            onPressed: () => _openAddExpenseOverlay(null),
             icon: const Icon(Icons.add),
           ),
         ],
@@ -73,7 +88,11 @@ class _ExpenseTrackerState extends State<ExpenseTracker> {
           Chart(expenses: widget.expenses),
           Expanded(
             child: widget.expenses.isNotEmpty
-                ? ExpensesList(expensesList: widget.expenses, onRemoveExpense: _removeExpense)
+                ? ExpensesList(
+                    expensesList: widget.expenses,
+                    onRemoveExpense: _removeExpense,
+                    onEditExpense: _openAddExpenseOverlay,
+                  )
                 : mainContent,
           ),
         ],
