@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_udemy/expense-tracker/components/chart/chart.dart';
 import 'package:flutter_udemy/expense-tracker/components/expenses_list/expenses_list.dart';
 import 'package:flutter_udemy/expense-tracker/components/new_expense_modal.dart';
 import 'package:flutter_udemy/expense-tracker/data/expense_data.dart';
@@ -13,18 +14,43 @@ class ExpenseTracker extends StatefulWidget {
 }
 
 class _ExpenseTrackerState extends State<ExpenseTracker> {
-  void addExpense(Expense expense) {
+  Widget mainContent = const Center(
+    child: Text('No expenses found, start adding some!'),
+  );
+
+  void _addExpense(Expense expense) {
     setState(() {
       widget.expenses.add(expense);
     });
   }
 
+  void _removeExpense(Expense expense) {
+    final deleteIndex = widget.expenses.indexOf(expense);
+    setState(() {
+      widget.expenses.remove(expense);
+    });
+    ScaffoldMessenger.of(context).clearSnackBars();
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        duration: const Duration(seconds: 3),
+        content: const Text('Expense Deleted'),
+        action: SnackBarAction(
+          label: 'Undo',
+          onPressed: () => setState(() {
+            widget.expenses.insert(deleteIndex, expense);
+          }),
+        ),
+      ),
+    );
+  }
+
   void _openAddExpenseOverlay() {
     showModalBottomSheet(
+      isScrollControlled: true,
       context: context,
       builder: (modalContext) {
         return NewExpenseModal(
-          addExpense: (Expense expense) => addExpense(expense),
+          addExpense: (Expense expense) => _addExpense(expense),
         );
       },
     );
@@ -35,7 +61,6 @@ class _ExpenseTrackerState extends State<ExpenseTracker> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Expense Tracker'),
-        backgroundColor: Colors.blue,
         actions: [
           IconButton(
             onPressed: _openAddExpenseOverlay,
@@ -45,9 +70,11 @@ class _ExpenseTrackerState extends State<ExpenseTracker> {
       ),
       body: Column(
         children: [
-          const Text('Chart'),
+          Chart(expenses: widget.expenses),
           Expanded(
-            child: ExpensesList(expensesList: widget.expenses),
+            child: widget.expenses.isNotEmpty
+                ? ExpensesList(expensesList: widget.expenses, onRemoveExpense: _removeExpense)
+                : mainContent,
           ),
         ],
       ),

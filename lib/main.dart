@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_udemy/expense-tracker/expense_tracker.dart';
+import 'package:flutter_udemy/theming/theme.dart';
 
 /// Quiz Runner
 
@@ -11,6 +12,9 @@ import 'package:flutter_udemy/expense-tracker/expense_tracker.dart';
 void main() {
   runApp(
     MaterialApp(
+      themeMode: ThemeMode.dark,
+      darkTheme: darkTheme,
+      theme: theme,
       home: ExpenseTracker(),
     ),
   );

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_udemy/quiz/components/question_summary.dart';
 import 'package:flutter_udemy/quiz/data/quiz_questions.dart';
-import 'package:flutter_udemy/quiz/models/quiz_question.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class QuizResultsScreen extends StatelessWidget {
@@ -31,9 +30,8 @@ class QuizResultsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final int noCorrectAnswers = quizSummary
-        .where((answer) => answer['correct_answer'] == answer['given_answer'])
-        .length;
+    final int noCorrectAnswers =
+        quizSummary.where((answer) => answer['correct_answer'] == answer['given_answer']).length;
 
     return SizedBox(
       width: double.infinity,

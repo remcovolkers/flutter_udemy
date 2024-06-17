@@ -18,11 +18,9 @@ class _NewExpenseModalState extends State<NewExpenseModal> {
 
   void _submit() {
     final double value = double.parse(_valueController.text);
-    final bool amountIsInvalid = value == null || value <= 0;
+    final bool amountIsInvalid = value <= 0;
 
-    if (_descriptionController.text.trim().isEmpty ||
-        amountIsInvalid ||
-        _selectedDate == null) {
+    if (_descriptionController.text.trim().isEmpty || amountIsInvalid || _selectedDate == null) {
       showDialog(
         context: context,
         builder: (dialogCtx) => AlertDialog(
@@ -60,11 +58,9 @@ class _NewExpenseModalState extends State<NewExpenseModal> {
       lastDate: now,
     );
 
-    setState(
-      () {
-        _selectedDate = chosenDate;
-      },
-    );
+    setState(() {
+      _selectedDate = chosenDate;
+    });
   }
 
   @override
@@ -77,7 +73,7 @@ class _NewExpenseModalState extends State<NewExpenseModal> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.fromLTRB(16, 48, 16, 16),
       child: Column(
         children: [
           Align(
@@ -112,15 +108,8 @@ class _NewExpenseModalState extends State<NewExpenseModal> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
-                    Text(
-                      _selectedDate == null
-                          ? ''
-                          : formatter.format(_selectedDate!),
-                    ),
-                    IconButton(
-                      onPressed: _openDatePicker,
-                      icon: const Icon(Icons.calendar_month),
-                    )
+                    Text(_selectedDate == null ? '' : formatter.format(_selectedDate!)),
+                    IconButton(onPressed: _openDatePicker, icon: const Icon(Icons.calendar_month))
                   ],
                 ),
               )
