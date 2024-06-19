@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_udemy/expense-tracker/expense_tracker.dart';
-import 'package:flutter_udemy/expense-tracker/theming/theme.dart';
+import 'package:flutter_udemy/meals-app/meals_app.dart';
 
 /// Quiz Runner
 
@@ -9,13 +8,27 @@ import 'package:flutter_udemy/expense-tracker/theming/theme.dart';
 // }
 
 /// Expense Tracker runner
+// void main() {
+//   runApp(
+//     MaterialApp(
+//       themeMode: ThemeMode.dark,
+//       darkTheme: darkTheme,
+//       theme: theme,
+//       home: ExpenseTracker(),
+//     ),
+//   );
+// }
+
+/// Meals App runner
 void main() {
   runApp(
     MaterialApp(
-      themeMode: ThemeMode.dark,
-      darkTheme: darkTheme,
-      theme: theme,
-      home: ExpenseTracker(),
+      home: Scaffold(
+        appBar: AppBar(
+          title: const Text('Meals App'),
+        ),
+        body: const MealsApp(),
+      ),
     ),
   );
 }
