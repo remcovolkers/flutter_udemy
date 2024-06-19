@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_udemy/expense-tracker/enums/expense_category.dart';
 import 'package:flutter_udemy/expense-tracker/models/expense.dart';
@@ -23,7 +21,9 @@ class _AddOrEditExpenseModalState extends State<AddOrEditExpenseModal> {
     final double value = double.parse(_valueController.text);
     final bool amountIsInvalid = value <= 0;
 
-    if (_descriptionController.text.trim().isEmpty || amountIsInvalid || _selectedDate == null) {
+    if (_descriptionController.text.trim().isEmpty ||
+        amountIsInvalid ||
+        _selectedDate == null) {
       showDialog(
         context: context,
         builder: (dialogCtx) => AlertDialog(
@@ -58,8 +58,8 @@ class _AddOrEditExpenseModalState extends State<AddOrEditExpenseModal> {
           category: _selectedExpenseCategory,
         );
 
-    ExpenseResponse addResponse =
-        ExpenseResponse(isEdit: widget.expense != null, expense: newOrEdittedExpense);
+    ExpenseResponse addResponse = ExpenseResponse(
+        isEdit: widget.expense != null, expense: newOrEdittedExpense);
     return Navigator.of(context).pop(addResponse);
   }
 
@@ -87,9 +87,7 @@ class _AddOrEditExpenseModalState extends State<AddOrEditExpenseModal> {
 
   @override
   Widget build(BuildContext context) {
-    final double keyboardInset = MediaQuery.of(context).viewInsets.bottom;
-    inspect(widget.expense);
-
+    final double keyboardSize = MediaQuery.of(context).viewInsets.bottom;
     bool isEdit = widget.expense != null;
 
     if (isEdit) {
@@ -99,82 +97,151 @@ class _AddOrEditExpenseModalState extends State<AddOrEditExpenseModal> {
       _selectedDate = widget.expense!.date;
     }
 
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(16, 48, 16, 16),
-      child: Column(
-        children: [
-          Align(
-            alignment: Alignment.topRight,
-            child: IconButton(
-              onPressed: () => Navigator.pop(context),
-              icon: const Icon(Icons.cancel),
-            ),
-          ),
-          TextField(
-            controller: _descriptionController,
-            maxLength: 50,
-            decoration: const InputDecoration(
-              label: Text('Description'),
-            ),
-          ),
-          Row(
-            children: [
-              Expanded(
-                child: TextField(
-                  controller: _valueController,
-                  decoration: const InputDecoration(
-                    label: Text('Value'),
-                    prefixText: '€ ',
+    return LayoutBuilder(builder: (layoutContext, constraints) {
+      final double width = constraints.maxWidth;
+
+      return SizedBox(
+        height: double.infinity,
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: EdgeInsets.fromLTRB(16, 16, 16, keyboardSize),
+            child: Column(
+              children: [
+                if (width >= 600)
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Expanded(child: _descriptionInput()),
+                      const SizedBox(width: 24),
+                      Expanded(child: _valueInput()),
+                    ],
+                  )
+                else
+                  Align(
+                    alignment: Alignment.topRight,
+                    child: _closeBtn(context),
                   ),
-                  keyboardType: TextInputType.number,
-                ),
-              ),
-              const SizedBox(width: 16),
-              Expanded(
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    Text(_selectedDate == null ? '' : formatter.format(_selectedDate!)),
-                    IconButton(onPressed: _openDatePicker, icon: const Icon(Icons.calendar_month))
-                  ],
-                ),
-              )
-            ],
-          ),
-          const SizedBox(height: 16),
-          Row(
-            children: [
-              DropdownButton(
-                value: _selectedExpenseCategory,
-                items: ExpenseCategory.values
-                    .map(
-                      (expenseCategory) => DropdownMenuItem(
-                        value: expenseCategory,
-                        child: Text(
-                          expenseCategory.name.toUpperCase(),
+                if (width < 600) _descriptionInput(),
+                if (width >= 600)
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Row(
+                          children: [
+                            _expenseCategoryPicker(),
+                            Expanded(child: _dateRow()),
+                          ],
                         ),
                       ),
-                    )
-                    .toList(),
-                onChanged: (value) {
-                  if (value == null) {
-                    return;
-                  }
-                  setState(() {
-                    _selectedExpenseCategory = value;
-                  });
-                },
+                      Expanded(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [_closeBtn(context), _saveBtn()],
+                        ),
+                      )
+                    ],
+                  )
+                else
+                  Row(
+                    children: [
+                      Expanded(
+                        child: _valueInput(),
+                      ),
+                      const SizedBox(width: 16),
+                      Expanded(
+                        child: _dateRow(),
+                      )
+                    ],
+                  ),
+                const SizedBox(height: 16),
+                if (width < 600)
+                  Row(
+                    children: [
+                      _expenseCategoryPicker(),
+                      const Spacer(),
+                      _saveBtn(),
+                    ],
+                  )
+              ],
+            ),
+          ),
+        ),
+      );
+    });
+  }
+
+  IconButton _saveBtn() {
+    return IconButton(
+      onPressed: _submit,
+      icon: const Icon(Icons.save),
+    );
+  }
+
+  DropdownButton<ExpenseCategory> _expenseCategoryPicker() {
+    return DropdownButton(
+      value: _selectedExpenseCategory,
+      items: ExpenseCategory.values
+          .map(
+            (expenseCategory) => DropdownMenuItem(
+              value: expenseCategory,
+              child: Text(
+                expenseCategory.name.toUpperCase(),
               ),
-              const Spacer(),
-              IconButton(
-                onPressed: _submit,
-                icon: const Icon(Icons.save),
-              ),
-            ],
+            ),
           )
-        ],
+          .toList(),
+      onChanged: (value) {
+        if (value == null) {
+          return;
+        }
+        setState(() {
+          _selectedExpenseCategory = value;
+        });
+      },
+    );
+  }
+
+  Row _dateRow() {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      mainAxisAlignment: MainAxisAlignment.end,
+      children: [
+        Text(
+          _selectedDate == null ? '' : formatter.format(_selectedDate!),
+        ),
+        IconButton(
+          onPressed: _openDatePicker,
+          icon: const Icon(Icons.calendar_month),
+        )
+      ],
+    );
+  }
+
+  TextField _valueInput() {
+    return TextField(
+      controller: _valueController,
+      decoration: const InputDecoration(
+        label: Text('Value'),
+        prefixText: '€ ',
       ),
+      keyboardType: TextInputType.number,
+    );
+  }
+
+  TextField _descriptionInput() {
+    return TextField(
+      controller: _descriptionController,
+      maxLength: 50,
+      decoration: const InputDecoration(
+        label: Text('Description'),
+      ),
+    );
+  }
+
+  IconButton _closeBtn(BuildContext context) {
+    return IconButton(
+      onPressed: () => Navigator.pop(context),
+      icon: const Icon(Icons.cancel),
     );
   }
 }

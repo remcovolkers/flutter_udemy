@@ -54,7 +54,8 @@ class _ExpenseTrackerState extends State<ExpenseTracker> {
   }
 
   void _openAddExpenseOverlay(Expense? expense) async {
-    ExpenseResponse newOrEdittedExpense = await showModalBottomSheet(
+    ExpenseResponse? newOrEdittedExpense = await showModalBottomSheet(
+      useSafeArea: true,
       isScrollControlled: true,
       context: context,
       builder: (modalContext) {
@@ -64,16 +65,19 @@ class _ExpenseTrackerState extends State<ExpenseTracker> {
       },
     );
 
-    if (newOrEdittedExpense.isEdit) {
-      _onEditExpense(newOrEdittedExpense.expense);
-    } else {
-      _addExpense(newOrEdittedExpense.expense);
+    if (newOrEdittedExpense != null) {
+      if (newOrEdittedExpense.isEdit) {
+        _onEditExpense(newOrEdittedExpense.expense);
+      } else {
+        _addExpense(newOrEdittedExpense.expense);
+      }
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    bool isLandscape = MediaQuery.of(context).size.width > MediaQuery.of(context).size.height;
+    bool isLandscape =
+        MediaQuery.of(context).size.width > MediaQuery.of(context).size.height;
 
     return Scaffold(
       appBar: AppBar(
