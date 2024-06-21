@@ -22,6 +22,7 @@ import 'package:flutter_udemy/meals-app/theming/meal_theme.dart';
 
 /// Meals App runner
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
   runApp(
     MaterialApp(
       theme: mealTheme,
