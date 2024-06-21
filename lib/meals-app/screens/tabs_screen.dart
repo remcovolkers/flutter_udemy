@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_udemy/meals-app/components/main_drawer.dart';
 import 'package:flutter_udemy/meals-app/models/meal.dart';
 import 'package:flutter_udemy/meals-app/screens/categories_screen.dart';
 import 'package:flutter_udemy/meals-app/screens/category_meals_screen.dart';
@@ -24,6 +25,14 @@ class _TabsScreenState extends State<TabsScreen> {
         activePageTitle = 'Categories';
       }
     });
+  }
+
+  void _setScreen(String identifier) {
+    if (identifier == 'filters') {
+      Navigator.of(context).pop();
+    } else {
+      Navigator.of(context).pop();
+    }
   }
 
   void _showInfoMessage(String message) {
@@ -55,6 +64,9 @@ class _TabsScreenState extends State<TabsScreen> {
           );
 
     return Scaffold(
+      drawer: MainDrawer(
+        onSelectScreen: _setScreen,
+      ),
       appBar: AppBar(
         title: Text(activePageTitle),
       ),
