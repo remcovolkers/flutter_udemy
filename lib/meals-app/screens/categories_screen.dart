@@ -15,9 +15,9 @@ class CategoriesScreen extends StatelessWidget {
 
     Navigator.of(context).push(
       MaterialPageRoute(
-        builder: (routeCtx) => CategoryMealsScreen(
+        builder: (routeCtx) => MealsScreen(
           meals: categoryMeals,
-          category: category,
+          title: category.title,
         ),
       ),
     );
@@ -25,12 +25,7 @@ class CategoriesScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Categories'),
-      ),
-      body: _categoryGrid(context),
-    );
+    return _categoryGrid(context);
   }
 
   GridView _categoryGrid(BuildContext context) {

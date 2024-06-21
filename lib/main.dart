@@ -26,12 +26,7 @@ void main() {
   runApp(
     MaterialApp(
       theme: mealTheme,
-      home: Scaffold(
-        appBar: AppBar(
-          title: const Text('Meals App'),
-        ),
-        body: const MealsApp(),
-      ),
+      home: const MealsApp(),
     ),
   );
 }

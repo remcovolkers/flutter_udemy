@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_udemy/meals-app/screens/categories_screen.dart';
+import 'package:flutter_udemy/meals-app/screens/tabs_screen.dart';
 
 class MealsApp extends StatefulWidget {
   const MealsApp({super.key});
@@ -11,6 +11,6 @@ class MealsApp extends StatefulWidget {
 class _MealsAppState extends State<MealsApp> {
   @override
   Widget build(BuildContext context) {
-    return const CategoriesScreen();
+    return const TabsScreen();
   }
 }

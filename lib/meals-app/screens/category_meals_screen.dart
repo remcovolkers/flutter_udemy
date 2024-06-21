@@ -1,46 +1,66 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_udemy/meals-app/models/category.dart';
+import 'package:flutter_udemy/meals-app/components/meal_item.dart';
+import 'package:flutter_udemy/meals-app/screens/meal_details_screen.dart';
 
 import '../models/meal.dart';
 
-class CategoryMealsScreen extends StatelessWidget {
+class MealsScreen extends StatelessWidget {
   final List<Meal> meals;
-  final Category category;
+  final String? title;
 
-  const CategoryMealsScreen({
+  const MealsScreen({
     super.key,
     required this.meals,
-    required this.category,
+    this.title,
   });
+
+  void _navigateToMeal(BuildContext context, Meal meal) {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (routeCtx) => MealDetailsScreen(meal: meal),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(category.title),
-      ),
-      body: meals.isNotEmpty ? _buildMenu() : _noItemsScreen(),
-    );
+    if (title != null) {
+      return Scaffold(
+          appBar: AppBar(
+            title: Text(title!),
+          ),
+          body: _content());
+    } else {
+      return _content();
+    }
+  }
+
+  Widget _content() {
+    return meals.isNotEmpty ? _buildMenu() : _noItemsScreen();
   }
 
   Widget _buildMenu() {
     return ListView.builder(
       itemCount: meals.length,
       itemBuilder: (context, index) {
-        return Text(
-          meals[index].title,
-          style: const TextStyle(
-            color: Colors.white,
-          ),
+        return MealItem(
+          meal: meals[index],
+          onSelectMeal: (meal) {
+            _navigateToMeal(context, meal);
+          },
         );
       },
     );
   }
 
   Widget _noItemsScreen() {
+    String screenText = title != null
+        ? 'No items currently known for category $title'
+        : 'No favorites set, go find them!';
+
     return Center(
         child: Text(
-      'No items currently known for category ${category.title}',
+      screenText,
       style: const TextStyle(
         color: Colors.white,
       ),
