@@ -3,9 +3,13 @@ import 'package:flutter_udemy/meals-app/models/meal.dart';
 
 class MealDetailsScreen extends StatelessWidget {
   final Meal meal;
-  final Function(Meal meal) setFavorite;
-  const MealDetailsScreen(
-      {super.key, required this.meal, required this.setFavorite});
+  final Function(Meal meal) onToggleFavorite;
+
+  const MealDetailsScreen({
+    super.key,
+    required this.meal,
+    required this.onToggleFavorite,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -15,7 +19,7 @@ class MealDetailsScreen extends StatelessWidget {
         actions: [
           IconButton(
             onPressed: () {
-              setFavorite(meal);
+              onToggleFavorite(meal);
             },
             icon: Icon(Icons.star_border_outlined),
           ),
