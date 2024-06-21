@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_udemy/meals-app/meals_app.dart';
+import 'package:flutter_udemy/meals-app/theming/meal_theme.dart';
 
 /// Quiz Runner
 
@@ -23,6 +24,7 @@ import 'package:flutter_udemy/meals-app/meals_app.dart';
 void main() {
   runApp(
     MaterialApp(
+      theme: mealTheme,
       home: Scaffold(
         appBar: AppBar(
           title: const Text('Meals App'),
