@@ -3,6 +3,7 @@ import 'package:flutter_udemy/meals-app/components/main_drawer.dart';
 import 'package:flutter_udemy/meals-app/models/meal.dart';
 import 'package:flutter_udemy/meals-app/screens/categories_screen.dart';
 import 'package:flutter_udemy/meals-app/screens/category_meals_screen.dart';
+import 'package:flutter_udemy/meals-app/screens/filters_screen.dart';
 
 class TabsScreen extends StatefulWidget {
   const TabsScreen({super.key});
@@ -28,10 +29,13 @@ class _TabsScreenState extends State<TabsScreen> {
   }
 
   void _setScreen(String identifier) {
-    if (identifier == 'filters') {
-      Navigator.of(context).pop();
-    } else {
-      Navigator.of(context).pop();
+    Navigator.of(context).pop();
+    if (identifier == 'Filters') {
+      Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (ctx) => const FiltersScreen(),
+        ),
+      );
     }
   }
 
