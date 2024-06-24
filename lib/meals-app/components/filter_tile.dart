@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class FilterSwitchTile extends StatelessWidget {
-  final Function(String filter) onChanged;
+  final Function(String filter, bool isChecked) onChanged;
   final bool filterToggled;
   final String type;
   final String subtitle;
@@ -19,7 +19,7 @@ class FilterSwitchTile extends StatelessWidget {
     return SwitchListTile(
       value: filterToggled,
       onChanged: (isChecked) {
-        onChanged(type);
+        onChanged(type, isChecked);
       },
       title: Text(
         type,
