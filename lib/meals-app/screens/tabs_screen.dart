@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_udemy/meals-app/components/main_drawer.dart';
-import 'package:flutter_udemy/meals-app/models/meal.dart';
 import 'package:flutter_udemy/meals-app/providers/favorites_provider.dart';
-import 'package:flutter_udemy/meals-app/providers/meals_prodiver.dart';
 import 'package:flutter_udemy/meals-app/screens/categories_screen.dart';
 import 'package:flutter_udemy/meals-app/screens/category_meals_screen.dart';
 import 'package:flutter_udemy/meals-app/screens/filters_screen.dart';
@@ -45,26 +43,9 @@ class _TabsScreenState extends ConsumerState<TabsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final List<Meal> availableMeals = ref.watch(mealsProvider).where((meal) {
-      final Map<Filter, bool> activeFilters = ref.watch(filtersProvider);
-      if (activeFilters[Filter.glutenfree]! && !meal.isGlutenFree) {
-        return false;
-      }
-      if (activeFilters[Filter.vegetarian]! && !meal.isVegetarian) {
-        return false;
-      }
-      if (activeFilters[Filter.vegan]! && !meal.isVegan) {
-        return false;
-      }
-      if (activeFilters[Filter.lactosefree]! && !meal.isLactoseFree) {
-        return false;
-      }
-      return true;
-    }).toList();
-
     Widget activePage = _selectedPageIndex == 0
         ? CategoriesScreen(
-            availableMeals: availableMeals,
+            availableMeals: ref.watch(filteredMealsProvider),
           )
         : MealsScreen(
             meals: ref.watch(favoritesProvider),
