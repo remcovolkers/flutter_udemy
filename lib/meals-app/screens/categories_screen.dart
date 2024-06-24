@@ -7,13 +7,17 @@ import 'package:flutter_udemy/meals-app/screens/category_meals_screen.dart';
 
 class CategoriesScreen extends StatelessWidget {
   final void Function(Meal meal) onToggleFavouriteMeal;
+  final List<Meal> availableMeals;
 
-  const CategoriesScreen({super.key, required this.onToggleFavouriteMeal});
+  const CategoriesScreen({
+    super.key,
+    required this.onToggleFavouriteMeal,
+    required this.availableMeals,
+  });
 
   void _selectCategory(BuildContext context, Category category) {
-    final List<Meal> categoryMeals = dummyMeals
-        .where((meal) => meal.categories.contains(category.id))
-        .toList();
+    final List<Meal> categoryMeals =
+        availableMeals.where((meal) => meal.categories.contains(category.id)).toList();
 
     Navigator.of(context).push(
       MaterialPageRoute(
