@@ -44,12 +44,8 @@ class _TabsScreenState extends ConsumerState<TabsScreen> {
   @override
   Widget build(BuildContext context) {
     Widget activePage = _selectedPageIndex == 0
-        ? CategoriesScreen(
-            availableMeals: ref.watch(filteredMealsProvider),
-          )
-        : MealsScreen(
-            meals: ref.watch(favoritesProvider),
-          );
+        ? CategoriesScreen(availableMeals: ref.watch(filteredMealsProvider))
+        : MealsScreen(meals: ref.watch(favoritesProvider));
 
     return Scaffold(
       drawer: MainDrawer(

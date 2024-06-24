@@ -5,7 +5,7 @@ import 'package:flutter_udemy/meals-app/models/category.dart';
 import 'package:flutter_udemy/meals-app/models/meal.dart';
 import 'package:flutter_udemy/meals-app/screens/category_meals_screen.dart';
 
-class CategoriesScreen extends StatelessWidget {
+class CategoriesScreen extends StatefulWidget {
   final List<Meal> availableMeals;
 
   const CategoriesScreen({
@@ -13,9 +13,16 @@ class CategoriesScreen extends StatelessWidget {
     required this.availableMeals,
   });
 
+  @override
+  State<CategoriesScreen> createState() => _CategoriesScreenState();
+}
+
+class _CategoriesScreenState extends State<CategoriesScreen> with SingleTickerProviderStateMixin {
+  late final AnimationController _animationController;
+
   void _selectCategory(BuildContext context, Category category) {
     final List<Meal> categoryMeals =
-        availableMeals.where((meal) => meal.categories.contains(category.id)).toList();
+        widget.availableMeals.where((meal) => meal.categories.contains(category.id)).toList();
 
     Navigator.of(context).push(
       MaterialPageRoute(
@@ -28,8 +35,43 @@ class CategoriesScreen extends StatelessWidget {
   }
 
   @override
+  initState() {
+    super.initState();
+    _animationController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 300),
+      lowerBound: 0,
+      upperBound: 1,
+    );
+    _animationController.forward();
+  }
+
+  @override
+  void dispose() {
+    _animationController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return _categoryGrid(context);
+    return AnimatedBuilder(
+      animation: _animationController,
+      builder: (context, child) {
+        return SlideTransition(
+          position: Tween(
+            begin: const Offset(0, 0.3),
+            end: const Offset(0, 0),
+          ).animate(
+            CurvedAnimation(
+              parent: _animationController,
+              curve: Curves.easeInOut,
+            ),
+          ),
+          child: child,
+        );
+      },
+      child: _categoryGrid(context),
+    );
   }
 
   GridView _categoryGrid(BuildContext context) {
