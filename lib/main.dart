@@ -25,10 +25,10 @@ import 'package:flutter_udemy/meals-app/theming/meal_theme.dart';
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   runApp(
-    MaterialApp(
-      theme: mealTheme,
-      home: const ProviderScope(
-        child: MealsApp(),
+    ProviderScope(
+      child: MaterialApp(
+        theme: mealTheme,
+        home: const MealsApp(),
       ),
     ),
   );

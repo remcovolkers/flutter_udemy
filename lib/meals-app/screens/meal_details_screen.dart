@@ -1,27 +1,38 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_udemy/meals-app/models/meal.dart';
+import 'package:flutter_udemy/meals-app/providers/favorites_provider.dart';
 
-class MealDetailsScreen extends StatelessWidget {
+class MealDetailsScreen extends ConsumerWidget {
   final Meal meal;
-  final Function(Meal meal) onToggleFavorite;
 
   const MealDetailsScreen({
     super.key,
     required this.meal,
-    required this.onToggleFavorite,
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
       appBar: AppBar(
         title: Text(meal.title),
         actions: [
           IconButton(
+            icon: const Icon(Icons.star_border_outlined),
             onPressed: () {
-              onToggleFavorite(meal);
+              final bool isFavorited =
+                  ref.read(favoritesProvider.notifier).toggleMealFavorite(meal);
+              ScaffoldMessenger.of(context).clearSnackBars();
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(
+                    isFavorited
+                        ? '${meal.title} added to favorites!'
+                        : '${meal.title} succesfully removed from favorites.',
+                  ),
+                ),
+              );
             },
-            icon: Icon(Icons.star_border_outlined),
           ),
         ],
       ),
@@ -62,8 +73,7 @@ class MealDetailsScreen extends StatelessWidget {
             const SizedBox(height: 16),
             for (final String step in meal.steps)
               Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                 child: Text(
                   step,
                   textAlign: TextAlign.center,
