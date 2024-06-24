@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_udemy/meals-app/meals_app.dart';
 import 'package:flutter_udemy/meals-app/theming/meal_theme.dart';
 
@@ -26,7 +27,9 @@ void main() {
   runApp(
     MaterialApp(
       theme: mealTheme,
-      home: const MealsApp(),
+      home: const ProviderScope(
+        child: MealsApp(),
+      ),
     ),
   );
 }
