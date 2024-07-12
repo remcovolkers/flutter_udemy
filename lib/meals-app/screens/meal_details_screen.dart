@@ -20,7 +20,19 @@ class MealDetailsScreen extends ConsumerWidget {
         title: Text(meal.title),
         actions: [
           IconButton(
-            icon: !isFavorited ? const Icon(Icons.star_border_outlined) : const Icon(Icons.star),
+            icon: AnimatedSwitcher(
+              duration: const Duration(milliseconds: 200),
+              transitionBuilder: (child, animation) {
+                return RotationTransition(
+                  turns: Tween(begin: 0.8, end: 1.0).animate(animation),
+                  child: child,
+                );
+              },
+              child: Icon(
+                !isFavorited ? Icons.star_border_outlined : Icons.star,
+                key: ValueKey(isFavorited),
+              ),
+            ),
             onPressed: () {
               final bool isFavorited =
                   ref.read(favoritesProvider.notifier).toggleMealFavorite(meal);
@@ -41,11 +53,14 @@ class MealDetailsScreen extends ConsumerWidget {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            Image.network(
-              meal.imageUrl,
-              height: 300,
-              width: double.infinity,
-              fit: BoxFit.cover,
+            Hero(
+              tag: meal.id,
+              child: Image.network(
+                meal.imageUrl,
+                height: 300,
+                width: double.infinity,
+                fit: BoxFit.cover,
+              ),
             ),
             const SizedBox(height: 16),
             Text(
@@ -75,7 +90,8 @@ class MealDetailsScreen extends ConsumerWidget {
             const SizedBox(height: 16),
             for (final String step in meal.steps)
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                 child: Text(
                   step,
                   textAlign: TextAlign.center,
